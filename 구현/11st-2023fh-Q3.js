@@ -49,4 +49,4 @@ function solution(str)
   return answer;
 }
 
-console.log(solution("<<?>>?"));
+console.log(solution(">>???<>>"));
