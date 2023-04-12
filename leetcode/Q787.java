@@ -7,12 +7,10 @@ class Solution {
         for(int[] f : flights)
             list[f[0]].add(new int[]{f[1], f[2]});
 
-        int[][] values = new int[101][k+2];
-        for(int i=0; i<=n; i++)
-           Arrays.fill(values[i], Integer.MAX_VALUE);
+        int[] stops = new int[101];
+        Arrays.fill(stops, Integer.MAX_VALUE);
 
         PriorityQueue<int[]> pq = new PriorityQueue<>(5001, (a, b) -> Integer.compare(a[1], b[1]));
-        values[src][0] = 0;
         pq.add(new int[]{src, 0, 0});
         while(!pq.isEmpty())
         {
@@ -21,20 +19,17 @@ class Solution {
             int value = tmp[1];
             int cnt = tmp[2];
 
-            for(int[] next : list[cur])
-            {
-                if(cnt > k || values[next[0]][cnt+1] <= values[cur][cnt] + next[1])
-                    continue;
+            if(cnt > stops[cur] || cnt > k + 1)
+                continue;
 
-                values[next[0]][cnt+1] = values[cur][cnt] + next[1];
-                pq.add(new int[]{next[0], values[next[0]][cnt+1], cnt + 1});
-            }
+            stops[cur] = cnt;
+            if(cur == dst)
+                return value;
+
+            for(int[] next : list[cur])
+                pq.add(new int[]{next[0], value + next[1], cnt + 1});
         }
 
-        int answer = Integer.MAX_VALUE;
-        for(int value : values[dst])
-            answer = Math.min(answer, value);
-
-        return answer == Integer.MAX_VALUE ? -1 : answer;
+        return -1;
     }
 }
